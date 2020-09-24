@@ -1,0 +1,73 @@
+export default {
+  palette: {
+    common: {
+      black: '#000',
+      white: '#fff',
+    },
+    background: {
+      paper: '#fff',
+      default: '#fafafa',
+      colored: 'rgb(245, 250, 245)',
+    },
+    primary: {
+      light: 'rgb(110, 135, 65)',
+      main: 'rgb(120, 150, 80)',
+      dark: 'rgb(135, 155, 90)',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: 'rgb(250, 235, 150)',
+      main: 'rgb(235, 220, 135)',
+      dark: 'rgb(215, 210, 115)',
+      contrastText: '#fff',
+    },
+    error: {
+      light: '#e57373',
+      main: '#f44336',
+      dark: '#d32f2f',
+      contrastText: '#fff',
+    },
+    text: {
+      primary: 'rgba(0, 0, 0, 0.87)',
+      secondary: 'rgba(0, 0, 0, 0.54)',
+      disabled: 'rgba(0, 0, 0, 0.38)',
+      hint: 'rgba(0, 0, 0, 0.38)',
+    },
+  },
+  colors: {
+    primary: ['#00909e', '#27496d', '#1f4068', '#142850'],
+    warning: ['#ff9800', '#ffa726', '#fb8c00', '#ffa21a'],
+    danger: ['#f44336', '#ef5350', '#e53935', '#f55a4e'],
+    success: ['#4caf50', '#66bb6a', '#43a047', '#5cb860'],
+    info: ['#00acc1', '#26c6da', '#00acc1', '#00d3ee'],
+    rose: ['#e91e63', '#ec407a', '#d81b60', '#eb3573'],
+    grey: [
+      '#999',
+      '#777',
+      '#3C4858',
+      '#AAAAAA',
+      '#D2D2D2',
+      '#DDD',
+      '#b4b4b4',
+      '#555555',
+      '#333',
+      '#a9afbb',
+      '#eee',
+      '#e7e7e7',
+    ],
+  },
+  typography: {
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+  },
+};

@@ -1,0 +1,7 @@
+{
+  "cognito": {
+    "REGION": "Retrieve from AWS Cognito console",
+    "USER_POOL_ID": "Retrieve from AWS Cognito console",
+    "APP_CLIENT_ID": "Retrieve from AWS Cognito console"
+  }
+}
