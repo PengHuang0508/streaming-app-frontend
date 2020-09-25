@@ -15,20 +15,44 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { Button } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Avatar from '@material-ui/core/Avatar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Link from '@material-ui/core/Link';
+import Box from '@material-ui/core/Box';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Container from '@material-ui/core/Container';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+// Files
+import { validateUploadData } from '../utils/validators';
 
-// media_key VARCHAR(64) NOT NULL,
-//       thumbnail_url VARCHAR(150) NOT NULL,
-//       title VARCHAR(50) NOT NULL,
-//       description VARCHAR (120),
-//       duration TIME NOT NULL,
-//       width INT(5) NOT NULL,
-//       height INT(5) NOT NULL,
-//       uploaded_by VARCHAR(50) DEFAULT 'Anonymous' NOT NULL,
-//       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//       min_permission VARCHAR(20) DEFAULT 'free' NOT N
+const useStyles = makeStyles((theme) => ({
+  uploadContainer: {
+    flexGrow: 1,
+    paddingTop: 80,
+  },
+  uploadPaper: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: theme.spacing(2, 4),
+    marginTop: theme.spacing(8),
 
-const useStyles = makeStyles((theme) => ({}));
+    backgroundColor: '#eef7e9',
+  },
+  uploadAvatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.colors.primary[2],
+  },
+  uploadForm: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+  uploadSubmit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
 const Upload = () => {
   const classes = useStyles();
@@ -70,30 +94,64 @@ const Upload = () => {
       formData.append(field, userInputs[field]);
     }
 
-    // TODO: validate file size
     dispatch(uploadMedia(formData));
   };
 
   return (
-    <div>
-      <form noValidate onSubmit={handleSubmit}>
-        <TextField
-          required
-          name='title'
-          label='Title'
-          // fullWidth
+    <Container
+      className={classes.uploadContainer}
+      component='main'
+      maxWidth='md'
+    >
+      <Paper className={classes.uploadPaper}>
+        <Avatar className={classes.uploadAvatar}>
+          <CloudUploadIcon />
+        </Avatar>
+        <Typography component='h1' variant='h5'>
+          Upload
+        </Typography>
 
-          {...bindUserInputs}
-        />
-        <TextField
-          name='media_description'
-          label='Description'
-          // fullWidth
+        <form className={classes.uploadForm} noValidate onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                name='title'
+                label='Title'
+                variant='outlined'
+                fullWidth
+                autoFocus
+                required
+                {...bindUserInputs}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl>
+                <TextField
+                  name='filedToUpload'
+                  InputProps={{
+                    type: 'file',
+                  }}
+                  fullWidth
+                  required
+                  onChange={handleSelectFile}
+                />
+                <FormHelperText>Maximum file size: 50MB</FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name='media_description'
+                label='Description'
+                variant='outlined'
+                multiline
+                rows={5}
+                fullWidth
+                {...bindUserInputs}
+              />
+            </Grid>
+          </Grid>
 
-          {...bindUserInputs}
-        />
-
-        {/* <Select
+          {/* <Select
         labelId='demo-simple-select-label'
         id='demo-simple-select'
         // value={age}
@@ -103,8 +161,8 @@ const Upload = () => {
         <MenuItem value={20}>Twenty</MenuItem>
         <MenuItem value={30}>Thirty</MenuItem>
       </Select> */}
-        {/* <InputLabel>Minimum Permission</InputLabel> */}
-        {/* <Select
+          {/* <InputLabel>Minimum Permission</InputLabel> */}
+          {/* <Select
         id='min_permission'
         name='min_permission'
         label='Minimum Permission'
@@ -113,26 +171,115 @@ const Upload = () => {
         <MenuItem value='free'>Free</MenuItem>
         <MenuItem value='premium'>Premium</MenuItem>
       </Select> */}
-        {/* <FormHelperText>Miniu</FormHelperText> */}
-        <TextField
-          required
-          name='firstName'
-          label='First name'
-          // fullWidth
-          autoComplete='given-name'
-          inputProps={{ type: 'file' }}
-          onChange={handleSelectFile}
-        />
-        <Button type='submit'>SUBMIT</Button>
-      </form>
+          {/* <FormHelperText>Miniu</FormHelperText> */}
 
-      <h1>{uploadStatus}</h1>
-    </div>
+          <Button
+            type='submit'
+            fullWidth
+            variant='contained'
+            color='primary'
+            className={classes.uploadSubmit}
+          >
+            Upload
+          </Button>
+        </form>
+
+        <h1>{uploadStatus}</h1>
+      </Paper>
+    </Container>
   );
 };
 
 export default Upload;
 
+{
+  /* <Container component="main" maxWidth="xs">
+<CssBaseline />
+<div className={classes.paper}>
+  <Avatar className={classes.avatar}>
+    <LockOutlinedIcon />
+  </Avatar>
+  <Typography component="h1" variant="h5">
+    Sign up
+  </Typography>
+  <form className={classes.form} noValidate>
+    <Grid container spacing={2}>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          autoComplete="fname"
+          name="firstName"
+          variant="outlined"
+          required
+          fullWidth
+          id="firstName"
+          label="First Name"
+          autoFocus
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          variant="outlined"
+          required
+          fullWidth
+          id="lastName"
+          label="Last Name"
+          name="lastName"
+          autoComplete="lname"
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          variant="outlined"
+          required
+          fullWidth
+          id="email"
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          variant="outlined"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <FormControlLabel
+          control={<Checkbox value="allowExtraEmails" color="primary" />}
+          label="I want to receive inspiration, marketing promotions and updates via email."
+        />
+      </Grid>
+    </Grid>
+    <Button
+      type="submit"
+      fullWidth
+      variant="contained"
+      color="primary"
+      className={classes.submit}
+    >
+      Sign Up
+    </Button>
+    <Grid container justify="flex-end">
+      <Grid item>
+        <Link href="#" variant="body2">
+          Already have an account? Sign in
+        </Link>
+      </Grid>
+    </Grid>
+  </form>
+</div>
+<Box mt={5}>
+  <Copyright />
+</Box>
+</Container> */
+}
 {
   /* <div>
   UPLOAD PAGE

@@ -1,24 +1,30 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getMediaList, streamMedia } from '../../redux/actions/mediaActions';
+import { getMediaList } from '../../redux/actions/mediaActions';
 // MUI
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import Skeleton from '@material-ui/lab/Skeleton';
 import { makeStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 // Components
 import MediaList from './MediaList';
 
 const useStyles = makeStyles((theme) => ({
   main: {
     flexGrow: 1,
-    padding: theme.spacing(10, 5),
+    maxWidth: '100%',
+    paddingTop: 80,
+    paddingLeft: theme.spacing(7),
+    paddingRight: theme.spacing(7),
 
     backgroundColor: '#eee',
+
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: theme.spacing(0),
+      paddingRight: theme.spacing(0),
+    },
   },
 }));
 
@@ -34,30 +40,41 @@ const Media = () => {
     return () => {};
   }, [dispatch]);
 
-  const categoryList = {};
+  const createCategory = () => {
+    let categoryList = {};
+    let mediaListComponent = [];
 
-  // Can also use tags to filter (eg. 'hot', 'popular', 'most viewed' ...)
-  categoryList['Free'] = mediaList.filter((attr) => {
-    return attr.min_permission == 'free';
-  });
+    let result = 0;
+    categoryList['Trending'] = mediaList.filter((attr) => {
+      return attr.view > 0 && result++ < 6;
+    });
 
-  categoryList['Premium'] = mediaList.filter((attr) => {
-    return attr.min_permission == 'premium';
-  });
+    categoryList['Free'] = mediaList.filter((attr) => {
+      return attr.min_permission == 'free';
+    });
+    categoryList['Premium'] = mediaList.filter((attr) => {
+      return attr.min_permission == 'premium';
+    });
 
-  let mediaListComponent = [];
+    for (const category in categoryList) {
+      // If the category contains no videos, don't display it
+      if (Object.keys(categoryList[category]).length === 0) {
+        continue;
+      }
 
-  for (const category in categoryList) {
-    mediaListComponent.push(
-      <MediaList
-        key={category}
-        categoryName={category}
-        mediaList={categoryList[category]}
-      />
-    );
-  }
+      mediaListComponent.push(
+        <MediaList
+          key={category}
+          categoryName={category}
+          mediaList={categoryList[category]}
+        />
+      );
+    }
 
-  return <div className={classes.main}>{mediaListComponent}</div>;
+    return mediaListComponent;
+  };
+
+  return <div className={classes.main}>{createCategory()}</div>;
 };
 
 export default Media;

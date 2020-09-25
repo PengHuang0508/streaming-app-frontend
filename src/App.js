@@ -1,6 +1,5 @@
 import React from 'react';
-import { Router, Route, Switch, Redirect } from 'react-router-dom';
-import axios from 'axios';
+import { Route, Switch, Router } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
 // Redux
 import { Provider } from 'react-redux';
@@ -14,6 +13,7 @@ import MediaPlayer from './pages/MediaPlayer';
 import Upload from './pages/Upload';
 // Components
 import Notifier from './components/Snackbar/Notifier';
+import Navbar from './components/Nav/Navbar';
 // Files
 import history from './history.js';
 import muiTheme from './utils/theme';
@@ -22,15 +22,9 @@ const theme = createMuiTheme(muiTheme);
 
 const Routes = (
   <React.Fragment>
-    <Route exact path='/'>
-      <Home />
-    </Route>
-    <Route path='/watch'>
-      <MediaPlayer />
-    </Route>
-    <Route exact path='/upload'>
-      <Upload />
-    </Route>
+    <Route exact path='/' component={Home} />
+    <Route path='/watch' component={MediaPlayer} />
+    <Route exact path='/upload' component={Upload} />
   </React.Fragment>
 );
 
@@ -41,7 +35,10 @@ function App() {
         <SnackbarProvider>
           <Notifier />
           <Router history={history}>
-            <Switch>{Routes}</Switch>
+            <div style={{ display: 'flex' }}>
+              <Navbar />
+              <Switch>{Routes}</Switch>
+            </div>
           </Router>
         </SnackbarProvider>
       </MuiThemeProvider>

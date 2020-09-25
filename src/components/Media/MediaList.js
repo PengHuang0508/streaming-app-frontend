@@ -1,65 +1,174 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { streamMedia, increaseView } from '../../redux/actions/mediaActions';
+import history from '../../history';
+// Hooks
+import { useWindowSize } from '../../hooks/useWindowSize';
 // MUI
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import Collapse from '@material-ui/core/Collapse';
+import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
+import Skeleton from '@material-ui/lab/Skeleton';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import { CardContent, Divider } from '@material-ui/core';
-import Container from '@material-ui/core/Container';
-import Skeleton from '@material-ui/lab/Skeleton';
-import PropTypes from 'prop-types';
-import Box from '@material-ui/core/Box';
-// Components
-import MediaCard from './MediaCard';
 
 const useStyles = makeStyles((theme) => ({
-  mediaListTitle: {
-    marginBottom: theme.spacing(3),
+  categoryTitle: {
+    paddingBottom: theme.spacing(3),
 
-    color: '#555',
+    fontFamily: 'Rubik, sans-serif',
+    fontSize: '3em',
+    fontWeight: 'bold',
+    color: theme.palette.primary.main,
   },
   categoryGrid: {
     width: '100%',
   },
+  thumbnail: {
+    width: 240,
+    maxWidth: '100%',
+    height: 150,
+
+    '&:hover': {
+      cursor: 'pointer',
+    },
+
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      height: 260,
+    },
+  },
+  mediaTitle: {
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  },
   divider: {
     height: 5,
-    margin: theme.spacing(5, 0),
+    margin: theme.spacing(10, 0, 2, 0),
+  },
+  moreContentContainer: {
+    width: '100%',
+  },
+  expandContentWrapper: {
+    paddingTop: theme.spacing(3),
+  },
+  expandButton: {
+    width: '100%',
+    marginTop: theme.spacing(1),
+
+    textAlign: 'center',
+    backgroundColor: '#ddd',
   },
 }));
 const MediaList = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const { categoryName, mediaList } = props;
   const { loading } = useSelector((state) => ({
     loading: state.ui.loading,
   }));
+  const [open, setOpen] = React.useState(false);
 
-  return (
-    <React.Fragment>
-      {categoryName && (
-        <Typography
-          className={classes.mediaListTitle}
-          component='h2'
-          variant='h3'
-        >
-          {categoryName}
-        </Typography>
-      )}
-      <Grid className={classes.categoryGrid} container spacing={3}>
-        {(loading ? Array.from(new Array(6)) : mediaList).map((item, index) => (
-          <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
+  const handleExpandMore = () => {
+    setOpen(!open);
+  };
+
+  const handleWatch = (mediaKey, createdAt) => {
+    history.push('/watch');
+    dispatch(streamMedia(mediaKey));
+    dispatch(increaseView(mediaKey, createdAt));
+  };
+
+  // Determine number of videos to display first. The rest will be hidden first.
+  const windowSize = useWindowSize();
+
+  let numberOfVideoToDisplay = 0;
+
+  if (windowSize.width >= 1280) {
+    numberOfVideoToDisplay = 8;
+  } else if (windowSize.width >= 600) {
+    numberOfVideoToDisplay = 6;
+  } else {
+    numberOfVideoToDisplay = mediaList.length;
+  }
+
+  const GridView = (
+    <Grid className={classes.categoryGrid} container spacing={2}>
+      {(loading
+        ? Array.from(new Array(6))
+        : mediaList.slice(0, numberOfVideoToDisplay)
+      ).map((item, index) => (
+        <Grid key={index} item xs={12} sm={4} md={4} lg={3}>
+          {item ? (
+            <img
+              className={classes.thumbnail}
+              alt={item.title}
+              src={item.thumbnail_url}
+              onClick={() => handleWatch(item.media_key, item.create_at)}
+            />
+          ) : (
+            <Skeleton variant='rect' width={210} height={118} />
+          )}
+
+          {item ? (
+            <Box pr={2}>
+              <Typography
+                className={classes.mediaTitle}
+                gutterBottom
+                variant='body2'
+                onClick={() => handleWatch(item.media_key, item.create_at)}
+              >
+                {item.title}
+              </Typography>
+              <Typography
+                display='block'
+                variant='caption'
+                color='textSecondary'
+              >
+                {item.uploaded_by}
+              </Typography>
+              <Typography variant='caption' color='textSecondary'>
+                {`${item.view} views • ${item.created_at.slice(0, 10)}`}
+              </Typography>
+            </Box>
+          ) : (
+            <Grid pt={0.5}>
+              <Skeleton width='30%' />
+              <Skeleton width='50%' />
+            </Grid>
+          )}
+        </Grid>
+      ))}
+    </Grid>
+  );
+
+  const moreContent = (
+    <div className={classes.expandContentWrapper}>
+      <Collapse in={open} timeout='auto' unmountOnExit>
+        {mediaList.slice(numberOfVideoToDisplay).map((item, index) => (
+          <Grid key={index} item xs={12} sm={4} md={4} lg={3}>
             {item ? (
               <img
-                style={{ width: 210, height: 118 }}
+                className={classes.thumbnail}
                 alt={item.title}
-                src={item.thumbnail}
+                src={item.thumbnail_url}
+                onClick={() => handleWatch(item.media_key, item.create_at)}
               />
             ) : (
-              <Skeleton variant='rect' width={210} height={118} />
+              <Skeleton variant='rec  t' width={210} height={118} />
             )}
 
             {item ? (
               <Box pr={2}>
-                <Typography gutterBottom variant='body2'>
+                <Typography
+                  className={classes.mediaTitle}
+                  gutterBottom
+                  variant='body2'
+                  onClick={() => handleWatch(item.media_key, item.create_at)}
+                >
                   {item.title}
                 </Typography>
                 <Typography
@@ -67,88 +176,45 @@ const MediaList = (props) => {
                   variant='caption'
                   color='textSecondary'
                 >
-                  {item.description}
+                  {item.uploaded_by}
                 </Typography>
                 <Typography variant='caption' color='textSecondary'>
-                  {`• ${item.created_at}`}
+                  {`${item.view} views • ${item.created_at.slice(0, 10)}`}
                 </Typography>
               </Box>
             ) : (
               <Grid pt={0.5}>
-                <Skeleton />
-                <Skeleton width='60%' />
+                <Skeleton width='30%' />
+                <Skeleton width='50%' />
               </Grid>
             )}
           </Grid>
         ))}
-      </Grid>
+      </Collapse>
+      <Button className={classes.expandButton} onClick={handleExpandMore}>
+        {open ? 'LESS' : 'MORE'}
+      </Button>
+    </div>
+  );
+
+  return (
+    <React.Fragment>
+      <Typography
+        id={categoryName}
+        className={classes.categoryTitle}
+        component='h2'
+        variant='h3'
+      >
+        {categoryName}
+      </Typography>
+
+      {GridView}
+
+      {mediaList.length > numberOfVideoToDisplay && moreContent}
+
+      <Divider className={classes.divider} />
     </React.Fragment>
   );
 };
 
 export default MediaList;
-
-// https://s3-us-west-2.amazonaws.com/thumbnails.mellon.com/elastic-transcoder/hls/3e31ce55aaaebaf1bbd39ff77d549005801b405e18dbf49e1cd7123f125d1a83/00001.png
-
-{
-  /* <Box key={index} width={210} marginRight={0.5} my={5}>
-{item ? (
-  <img
-    style={{ width: 210, height: 118 }}
-    alt={item.title}
-    src={item.src}
-  />
-) : (
-  <Skeleton variant='rect' width={210} height={118} />
-)}
-
-{item ? (
-  <Box pr={2}>
-    <Typography gutterBottom variant='body2'>
-      {item.title}
-    </Typography>
-    <Typography
-      display='block'
-      variant='caption'
-      color='textSecondary'
-    >
-      {item.description}
-    </Typography>
-    <Typography variant='caption' color='textSecondary'>
-      {`• ${item.created_at}`}
-    </Typography>
-  </Box> */
-}
-{
-  /* <Grid container spacing={2}>
-{mediaList.map((media) => (
-  <Grid
-    key={`${media.media_key}-${media.created_at}`}
-    item
-    xs={12}
-    md={4}
-    lg={3}
-  >
-    <MediaCard
-      title={media.title}
-      description={media.description}
-      duration={media.duration}
-    />
-  </Grid>
-))}
-</Grid>
-<Divider className={classes.divider} /> */
-}
-
-// <Grid container wrap='nowrap'>
-// {Array.from(new Array(3)).map((index) => (
-//   <Box key={index} width={210} marginRight={0.5} my={5}>
-//     <Skeleton variant='rect' width={210} height={118} />
-
-//     <Box pt={0.5}>
-//       <Skeleton />
-//       <Skeleton width='60%' />
-//     </Box>
-//   </Box>
-// ))}
-// </Grid>
