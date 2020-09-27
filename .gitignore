@@ -23,7 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # vs code config
-/.vscode
+.vscode
 
 # contain sensitive information
 /src/config.json

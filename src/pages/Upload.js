@@ -4,28 +4,19 @@ import { uploadMedia } from '../redux/actions/mediaActions';
 // Hooks
 import { useInputs } from '../hooks/useInputs';
 // MUI
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Link from '@material-ui/core/Link';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+// import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+// Icons
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-// Files
-import { validateUploadData } from '../utils/validators';
 
 const useStyles = makeStyles((theme) => ({
   uploadContainer: {
@@ -57,16 +48,13 @@ const useStyles = makeStyles((theme) => ({
 const Upload = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { uploadStatus } = useSelector((state) => ({
-    uploadStatus: state.ui.uploadStatus,
-  }));
+  const username = useSelector((state) => state.user.username);
 
-  // TODO set uploaded_by to username
   const initialState = {
     title: '',
     media_description: '',
     min_permission: 'free',
-    uploaded_by: 'Anonymous',
+    uploaded_by: username,
   };
 
   const {
@@ -85,7 +73,7 @@ const Upload = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleUpload = (e) => {
     e.preventDefault();
 
     let formData = new FormData();
@@ -95,6 +83,7 @@ const Upload = () => {
     }
 
     dispatch(uploadMedia(formData));
+    resetUserInputs();
   };
 
   return (
@@ -111,7 +100,7 @@ const Upload = () => {
           Upload
         </Typography>
 
-        <form className={classes.uploadForm} noValidate onSubmit={handleSubmit}>
+        <form className={classes.uploadForm} noValidate onSubmit={handleUpload}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -150,29 +139,6 @@ const Upload = () => {
               />
             </Grid>
           </Grid>
-
-          {/* <Select
-        labelId='demo-simple-select-label'
-        id='demo-simple-select'
-        // value={age}
-        // onChange={handleChange}
-      >
-        <MenuItem value={10}>Ten</MenuItem>
-        <MenuItem value={20}>Twenty</MenuItem>
-        <MenuItem value={30}>Thirty</MenuItem>
-      </Select> */}
-          {/* <InputLabel>Minimum Permission</InputLabel> */}
-          {/* <Select
-        id='min_permission'
-        name='min_permission'
-        label='Minimum Permission'
-        {...bindUserInputs}
-      >
-        <MenuItem value='free'>Free</MenuItem>
-        <MenuItem value='premium'>Premium</MenuItem>
-      </Select> */}
-          {/* <FormHelperText>Miniu</FormHelperText> */}
-
           <Button
             type='submit'
             fullWidth
@@ -183,133 +149,9 @@ const Upload = () => {
             Upload
           </Button>
         </form>
-
-        <h1>{uploadStatus}</h1>
       </Paper>
     </Container>
   );
 };
 
 export default Upload;
-
-{
-  /* <Container component="main" maxWidth="xs">
-<CssBaseline />
-<div className={classes.paper}>
-  <Avatar className={classes.avatar}>
-    <LockOutlinedIcon />
-  </Avatar>
-  <Typography component="h1" variant="h5">
-    Sign up
-  </Typography>
-  <form className={classes.form} noValidate>
-    <Grid container spacing={2}>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          autoComplete="fname"
-          name="firstName"
-          variant="outlined"
-          required
-          fullWidth
-          id="firstName"
-          label="First Name"
-          autoFocus
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          variant="outlined"
-          required
-          fullWidth
-          id="lastName"
-          label="Last Name"
-          name="lastName"
-          autoComplete="lname"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          variant="outlined"
-          required
-          fullWidth
-          id="email"
-          label="Email Address"
-          name="email"
-          autoComplete="email"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          variant="outlined"
-          required
-          fullWidth
-          name="password"
-          label="Password"
-          type="password"
-          id="password"
-          autoComplete="current-password"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <FormControlLabel
-          control={<Checkbox value="allowExtraEmails" color="primary" />}
-          label="I want to receive inspiration, marketing promotions and updates via email."
-        />
-      </Grid>
-    </Grid>
-    <Button
-      type="submit"
-      fullWidth
-      variant="contained"
-      color="primary"
-      className={classes.submit}
-    >
-      Sign Up
-    </Button>
-    <Grid container justify="flex-end">
-      <Grid item>
-        <Link href="#" variant="body2">
-          Already have an account? Sign in
-        </Link>
-      </Grid>
-    </Grid>
-  </form>
-</div>
-<Box mt={5}>
-  <Copyright />
-</Box>
-</Container> */
-}
-{
-  /* <div>
-  UPLOAD PAGE
-  <Button
-  variant="contained"
-  component="label"
->
-  Upload File
-  <input
-    type="file"
-    style={{ display: "none" }}
-  />
-</Button>
-  </div>; */
-}
-
-// var formData = new FormData();
-// var imagefile = document.querySelector('#file');
-// formData.append("image", imagefile.files[0]);
-// axios.post('upload_file', formData, {
-//     headers: {
-//       'Content-Type': 'multipart/form-data'
-//     }
-// })
-
-// fileChangedHandler = (event) => {
-//   let file_size = event.target.files[0].size;
-
-//   //or if you like to have name and type
-//   let file_name = event.target.files[0].name;
-//   let file_type = event.target.files[0].type;
-//  //do whatever operation you want to do here
-// };

@@ -4,9 +4,9 @@ import ReactHlsPlayer from 'react-hls-player';
 
 const MediaPlayer = () => {
   const streamURL = useSelector((state) => state.media.streamURL);
-
+  console.log('streamURL', streamURL);
   return (
-    <div>
+    <div style={{ flexGrow: 1 }}>
       <ReactHlsPlayer
         url={streamURL}
         autoplay={true}

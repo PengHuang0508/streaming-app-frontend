@@ -1,25 +1,19 @@
 import React, { useState } from 'react';
+import history from '../../history';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUserPermission, signOut } from '../../redux/actions/userActions';
+// MUI
 import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import Hidden from '@material-ui/core/Hidden';
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
-import MenuIcon from '@material-ui/icons/Menu';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+// Icons
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
+import MenuIcon from '@material-ui/icons/Menu';
 // Components
 import ResponsiveDrawer from '../Drawer/Drawer';
 
@@ -41,30 +35,59 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  permissionButton: {
+    marginLeft: theme.spacing(1),
+  },
 }));
 
 const Navbar = () => {
   const classes = useStyles();
-  const [auth, setAuth] = useState(true);
+  const dispatch = useDispatch();
+  const { isAuthenticated, username, permission } = useSelector((state) => ({
+    isAuthenticated: state.user.isAuthenticated,
+    username: state.user.username,
+    permission: state.user.permission,
+  }));
+
   const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
-
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const open = Boolean(anchorEl);
+
+  const capitalizeString = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+  const handleMenuToggle = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+  const handleCloseAndRedirect = (isRedirect) => {
+    setAnchorEl(null);
+    isRedirect && history.push('/account');
+  };
+
+  const handleUpgradeAccount = () => {
+    const userInfo = {
+      username: username,
+      permission: 'premium',
+    };
+
+    dispatch(updateUserPermission(userInfo));
+  };
+
+  const handleDowngradeAccount = () => {
+    const userInfo = {
+      username: username,
+      permission: 'free',
+    };
+
+    dispatch(updateUserPermission(userInfo));
+  };
+
+  const handleSignOut = () => {
+    dispatch(signOut());
   };
 
   return (
@@ -81,16 +104,43 @@ const Navbar = () => {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant='h6' noWrap>
-            Welcome
+            {username
+              ? `Welcome back ${capitalizeString(username)}`
+              : 'Welcome'}
           </Typography>
 
-          {auth && (
-            <div>
+          {isAuthenticated ? (
+            <React.Fragment>
+              <Typography color='secondary'>{`${capitalizeString(
+                permission
+              )} account`}</Typography>
+
+              {permission === 'free' ? (
+                <Button
+                  className={classes.permissionButton}
+                  variant='contained'
+                  onClick={handleUpgradeAccount}
+                >
+                  Upgrade
+                </Button>
+              ) : (
+                <Button
+                  className={classes.permissionButton}
+                  variant='contained'
+                  onClick={handleDowngradeAccount}
+                >
+                  Downgrade
+                </Button>
+              )}
+              <Button onClick={handleSignOut}>Sign out</Button>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
               <IconButton
-                aria-label='account of current user'
+                aria-label='account'
                 aria-controls='menu-appbar'
                 aria-haspopup='true'
-                onClick={handleMenu}
+                onClick={handleMenuToggle}
                 color='inherit'
               >
                 <AccountCircle />
@@ -108,12 +158,13 @@ const Navbar = () => {
                   horizontal: 'right',
                 }}
                 open={open}
-                onClose={handleClose}
+                onClose={() => handleCloseAndRedirect(false)}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={() => handleCloseAndRedirect(true)}>
+                  Sign in
+                </MenuItem>
               </Menu>
-            </div>
+            </React.Fragment>
           )}
         </Toolbar>
       </AppBar>

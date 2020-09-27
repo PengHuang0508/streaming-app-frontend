@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { streamMedia, increaseView } from '../../redux/actions/mediaActions';
+import { enqueueSnackbar } from '../../redux/actions/snackbarActions';
 import history from '../../history';
 // Hooks
 import { useWindowSize } from '../../hooks/useWindowSize';
@@ -45,6 +46,9 @@ const useStyles = makeStyles((theme) => ({
       cursor: 'pointer',
     },
   },
+  mediaItem: {
+    backgroundColor: '#eee',
+  },
   divider: {
     height: 5,
     margin: theme.spacing(10, 0, 2, 0),
@@ -67,8 +71,9 @@ const MediaList = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { categoryName, mediaList } = props;
-  const { loading } = useSelector((state) => ({
+  const { loading, permission } = useSelector((state) => ({
     loading: state.ui.loading,
+    permission: state.user.permission,
   }));
   const [open, setOpen] = React.useState(false);
 
@@ -76,10 +81,26 @@ const MediaList = (props) => {
     setOpen(!open);
   };
 
-  const handleWatch = (mediaKey, createdAt) => {
-    history.push('/watch');
-    dispatch(streamMedia(mediaKey));
-    dispatch(increaseView(mediaKey, createdAt));
+  const isEligibleToWatch = (minPermission) => {
+    return minPermission === 'free' || permission === 'premium';
+  };
+
+  const handleWatch = (mediaKey, minPermission) => {
+    if (isEligibleToWatch(minPermission)) {
+      dispatch(streamMedia(mediaKey));
+      dispatch(increaseView(mediaKey));
+      history.push('/watch');
+    } else {
+      dispatch(
+        enqueueSnackbar({
+          message: `Sorry, you don't have the permission required to watch this video.`,
+          options: {
+            key: new Date().getTime() + Math.random(),
+            variant: 'warning',
+          },
+        })
+      );
+    }
   };
 
   // Determine number of videos to display first. The rest will be hidden first.
@@ -101,13 +122,22 @@ const MediaList = (props) => {
         ? Array.from(new Array(6))
         : mediaList.slice(0, numberOfVideoToDisplay)
       ).map((item, index) => (
-        <Grid key={index} item xs={12} sm={4} md={4} lg={3}>
+        <Grid
+          className={classes.mediaItem}
+          key={index}
+          item
+          xs={12}
+          sm={4}
+          md={4}
+          lg={3}
+          align='center'
+        >
           {item ? (
             <img
               className={classes.thumbnail}
               alt={item.title}
               src={item.thumbnail_url}
-              onClick={() => handleWatch(item.media_key, item.create_at)}
+              onClick={() => handleWatch(item.media_key)}
             />
           ) : (
             <Skeleton variant='rect' width={210} height={118} />
@@ -119,7 +149,7 @@ const MediaList = (props) => {
                 className={classes.mediaTitle}
                 gutterBottom
                 variant='body2'
-                onClick={() => handleWatch(item.media_key, item.create_at)}
+                onClick={() => handleWatch(item.media_key)}
               >
                 {item.title}
               </Typography>
@@ -155,10 +185,10 @@ const MediaList = (props) => {
                 className={classes.thumbnail}
                 alt={item.title}
                 src={item.thumbnail_url}
-                onClick={() => handleWatch(item.media_key, item.create_at)}
+                onClick={() => handleWatch(item.media_key, item.min_permission)}
               />
             ) : (
-              <Skeleton variant='rec  t' width={210} height={118} />
+              <Skeleton variant='rect' width={210} height={118} />
             )}
 
             {item ? (
@@ -167,7 +197,9 @@ const MediaList = (props) => {
                   className={classes.mediaTitle}
                   gutterBottom
                   variant='body2'
-                  onClick={() => handleWatch(item.media_key, item.create_at)}
+                  onClick={() =>
+                    handleWatch(item.media_key, item.min_permission)
+                  }
                 >
                   {item.title}
                 </Typography>

@@ -9,11 +9,8 @@ export const SET_USER = 'SET_USER';
 export const CLEAR_USER = 'CLEAR_USER';
 
 // Media reducer types
-
 export const SET_MEDIA_LIST = 'SET_MEDIA_LIST';
 export const SET_STREAM_URL = 'SET_STREAM_URL';
-export const SET_UPLOAD_STATUS = 'SET_UPLOAD_STATUS';
-export const CLEAR_UPLOAD_STATUS = 'CLEAR_UPLOAD_STATUS';
 
 // Snackbar types
 export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';

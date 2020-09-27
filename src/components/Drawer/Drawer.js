@@ -1,7 +1,9 @@
 import React from 'react';
-import history from '../../history';
+import { useDispatch, useSelector } from 'react-redux';
+import { enqueueSnackbar } from '../../redux/actions/snackbarActions';
 import { useLocation } from 'react-router-dom';
 import { HashLink as Link } from 'react-router-hash-link';
+import history from '../../history';
 //  MUI
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
@@ -10,6 +12,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 // Icons
@@ -64,8 +67,10 @@ const useStyles = makeStyles((theme) => ({
 
 function ResponsiveDrawer(props) {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const theme = useTheme();
   const location = useLocation();
+  const permission = useSelector((state) => state.user.permission);
   const currentPath = location.pathname;
 
   const { mobileOpen, handleDrawerToggle } = props;
@@ -78,6 +83,21 @@ function ResponsiveDrawer(props) {
       left: 0,
       behavior: 'smooth',
     });
+  };
+  const handleClickUpload = () => {
+    if (permission === 'premium' || permission === 'admin') {
+      history.push('/upload');
+    } else {
+      dispatch(
+        enqueueSnackbar({
+          message: `Sorry, you don't have the permission to upload.`,
+          options: {
+            key: new Date().getTime() + Math.random(),
+            variant: 'warning',
+          },
+        })
+      );
+    }
   };
 
   const drawer = (
@@ -145,7 +165,7 @@ function ResponsiveDrawer(props) {
         </Link>
       </List>
       <Divider />
-      <List>
+      <List subheader={<ListSubheader>Premium Only</ListSubheader>}>
         <ListItem button>
           <ListItemIcon>
             <CloudUploadIcon />
@@ -153,7 +173,7 @@ function ResponsiveDrawer(props) {
           <ListItemText
             className={classes.linkButton}
             primary='Upload'
-            onClick={() => history.push('/upload')}
+            onClick={handleClickUpload}
             disableTypography
           />
         </ListItem>

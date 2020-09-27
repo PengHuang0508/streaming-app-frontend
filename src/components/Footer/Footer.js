@@ -7,12 +7,12 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   footer: {
+    width: '100%',
     padding: theme.spacing(6, 0),
-    marginTop: theme.spacing(8),
 
     color: '#fff',
 
-    backgroundColor: '#000',
+    backgroundColor: theme.palette.primary.dark,
   },
   footerTitle: {
     fontFamily: 'Rubik',

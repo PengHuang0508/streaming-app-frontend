@@ -1,7 +1,7 @@
 import React from 'react';
 // Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../../redux/actions/userActions';
+import { signIn } from '../../redux/actions/userActions';
 // Hooks
 import { useInputs } from '../../hooks/useInputs';
 // MUI
@@ -17,7 +17,7 @@ import LockRoundedIcon from '@material-ui/icons/LockRounded';
 // Styles
 import formStyles from './accountStyles';
 
-const Register = (props) => {
+const SignIn = (props) => {
   const classes = formStyles();
   const dispatch = useDispatch();
   const { handleSwitchAction } = props;
@@ -29,21 +29,17 @@ const Register = (props) => {
   const initialState = {
     username: '',
     password: '',
-    email: '',
   };
   const { inputs: userInputs, bind: bindUserInputs } = useInputs(initialState);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const registerData = {
+    const signInData = {
       username: userInputs.username.toLowerCase(),
       password: userInputs.password,
-      attributes: {
-        email: userInputs.email.toLowerCase(),
-      },
     };
-    dispatch(registerUser(registerData));
+    dispatch(signIn(signInData));
   };
 
   return (
@@ -54,7 +50,7 @@ const Register = (props) => {
           component='h2'
           variant='h4'
         >
-          Register
+          Welcome back
         </Typography>
         <form noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
@@ -67,6 +63,7 @@ const Register = (props) => {
                 fullWidth
                 required
                 value={userInputs.username}
+                error={errors ? true : false}
                 {...bindUserInputs}
               />
             </Grid>
@@ -80,21 +77,7 @@ const Register = (props) => {
                 fullWidth
                 required
                 value={userInputs.password}
-                helperText='**At least 6 digits. Must contain uppercase letter, lower case letter and number.'
-                {...bindUserInputs}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id='email'
-                name='email'
-                label='Email'
-                type='email'
-                variant='outlined'
-                fullWidth
-                required
-                value={userInputs.email}
-                helperText='**Please provide a valid email. We will sent you a verification email to complete the registration process.'
+                error={errors ? true : false}
                 {...bindUserInputs}
               />
             </Grid>
@@ -119,19 +102,19 @@ const Register = (props) => {
             disabled={loading}
             startIcon={<LockRoundedIcon />}
           >
-            Submit
+            Sign In
           </Button>
         </form>
         <Typography className={classes.registerFootnote} variant='subtitle2'>
-          {'Always have an account? Click '}
+          {"Don't have an account yet? Create one "}
           <Link href='#' onClick={handleSwitchAction}>
             here
           </Link>
-          {' to sign in.'}
+          {'.'}
         </Typography>
       </Paper>
     </Container>
   );
 };
 
-export default Register;
+export default SignIn;

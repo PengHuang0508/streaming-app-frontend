@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getMediaList } from '../../redux/actions/mediaActions';
+import React from 'react';
+import { useSelector } from 'react-redux';
 // MUI
 import { makeStyles } from '@material-ui/core/styles';
 // Components
@@ -13,8 +12,6 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 80,
     paddingLeft: theme.spacing(7),
     paddingRight: theme.spacing(7),
-
-    backgroundColor: '#eee',
 
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(2),
@@ -30,15 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Media = () => {
   const classes = useStyles();
-  const dispatch = useDispatch();
-  const { mediaList } = useSelector((state) => ({
-    mediaList: state.media.mediaList,
-  }));
-
-  useEffect(() => {
-    dispatch(getMediaList());
-    return () => {};
-  }, [dispatch]);
+  const mediaList = useSelector((state) => state.media.mediaList);
 
   const createCategory = () => {
     let categoryList = {};
@@ -50,10 +39,10 @@ const Media = () => {
     });
 
     categoryList['Free'] = mediaList.filter((attr) => {
-      return attr.min_permission == 'free';
+      return attr.min_permission === 'free';
     });
     categoryList['Premium'] = mediaList.filter((attr) => {
-      return attr.min_permission == 'premium';
+      return attr.min_permission === 'premium';
     });
 
     for (const category in categoryList) {

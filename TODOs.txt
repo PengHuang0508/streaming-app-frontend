@@ -1,3 +1,6 @@
++1 view after click on the video
 before streaming video, check the permission from table user
 
-Fix font import
+
+TEST: api server offline
+

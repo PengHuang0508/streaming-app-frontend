@@ -35,6 +35,7 @@ const Notifier = () => {
 
         // display snackbar using notistack
         enqueueSnackbar(message, {
+          autoHideDuration: 2000,
           key,
           ...options,
           onClose: (event, reason, myKey) => {
@@ -47,7 +48,7 @@ const Notifier = () => {
             dispatch(removeSnackbar(myKey));
             removeDisplayed(myKey);
           },
-          autoHideDuration: 1000,
+
           anchorOrigin: { vertical: 'top', horizontal: 'center' },
         });
 

@@ -10,7 +10,9 @@ import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 // Pages
 import Home from './pages/Home';
 import MediaPlayer from './pages/MediaPlayer';
+import Account from './pages/Account';
 import Upload from './pages/Upload';
+import Edit from './pages/Edit';
 // Components
 import Notifier from './components/Snackbar/Notifier';
 import Navbar from './components/Nav/Navbar';
@@ -24,7 +26,9 @@ const Routes = (
   <React.Fragment>
     <Route exact path='/' component={Home} />
     <Route path='/watch' component={MediaPlayer} />
+    <Route exact path='/account' component={Account} />
     <Route exact path='/upload' component={Upload} />
+    <Route exact path='/edit' component={Edit} />
   </React.Fragment>
 );
 

@@ -2,7 +2,9 @@ import { SET_USER, CLEAR_USER } from '../types';
 
 const initialState = {
   username: '',
+  email: '',
   permission: '',
+  isAuthenticated: false,
 };
 
 export default function (state = initialState, action) {
@@ -10,7 +12,9 @@ export default function (state = initialState, action) {
     case SET_USER:
       return {
         username: action.payload.username,
+        email: action.payload.email,
         permission: action.payload.permission,
+        isAuthenticated: true,
       };
     case CLEAR_USER:
       return initialState;
