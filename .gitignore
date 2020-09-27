@@ -28,4 +28,4 @@ yarn-error.log*
 # contain sensitive information
 /src/config.json
 
-/TODOs.text
+TODOs.txt

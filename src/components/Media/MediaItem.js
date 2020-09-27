@@ -83,7 +83,9 @@ const MediaItem = (props) => {
             className={classes.thumbnail}
             alt={itemData.title}
             src={itemData.thumbnail_url}
-            onClick={() => handleStreamMedia(itemData.media_key)}
+            onClick={() =>
+              handleStreamMedia(itemData.media_key, itemData.min_permission)
+            }
             onError={(e) => {
               e.target.src = imageNotFound;
             }}
@@ -102,7 +104,9 @@ const MediaItem = (props) => {
             className={classes.mediaTitle}
             gutterBottom
             variant='body2'
-            onClick={() => handleStreamMedia(itemData.media_key)}
+            onClick={() =>
+              handleStreamMedia(itemData.media_key, itemData.min_permission)
+            }
           >
             {itemData.title}
           </Typography>

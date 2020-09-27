@@ -3,7 +3,7 @@ import { SET_USER, CLEAR_USER } from '../types';
 const initialState = {
   username: '',
   email: '',
-  permission: '',
+  permission: 'free',
   isAuthenticated: false,
 };
 
