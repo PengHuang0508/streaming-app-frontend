@@ -1,68 +1,122 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Mellon
 
-## Available Scripts
+Mellon is a AWS powered online video streaming platform.
 
-In the project directory, you can run:
+- Upload your video
+- Backend will do all the processing
+- Watch your video wherever!
 
-### `npm start`
+# Features
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Registered users can upload and edit videos.
+- Backend takes care of all the video preparation and transcoding.
+- Files are encrypted and stored safely on AWS S3.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Tech stacks
 
-### `npm test`
+- [ReactJS](https://reactjs.org/) - JS library
+- [Create React App](https://reactjs.org/docs/create-a-new-react-app.html) - toolchain for setting react environment
+- [Redux](https://redux.js.org/) - state management library
+- [PHP](https://www.php.net/) - process backend requests
+- [MySQL](https://www.mysql.com/) - database
+- [Nginx](https://www.nginx.com/) - reverse proxy
+- [Node.js](https://nodejs.org/en/) - JS runtime
+- [Compoer](https://getcomposer.org/) - PHP dependency manager
+- [Material UI](https://material-ui.com/) - React UI framework
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### AWS Services
 
-### `npm run build`
+- [AWS S3](https://aws.amazon.com/s3/) - online storage
+- [AWS IAM](https://aws.amazon.com/iam/) - access control
+- [AWS Elastic Transcoder](https://aws.amazon.com/elastictranscoder/) - transcode files
+- [AWS CloudFront](https://aws.amazon.com/cloudfront/) - CDN for streaming HLS
+- [AWS Amplify](https://aws.amazon.com/amplify/) - frontend library
+- [AWS cognito](https://aws.amazon.com/cognito/) - access control, like sign-in sign-up
+- [AWS KMS](https://aws.amazon.com/kms/) - encryption keys
+- [AWS EC2](https://aws.amazon.com/ec2/) - host online demo
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+You need to first install Node, Nginx, PHP and MySQL on your machine.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To set up the backend environment, please refering to the following guides:
+[How To Install Linux, Nginx, MySQL, PHP (LEMP stack) in Ubuntu 16.04](https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-in-ubuntu-16-04)
+[How To Install Linux, Nginx, MySQL, PHP (LEMP stack) on Ubuntu 18.04](https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-ubuntu-18-04)
 
-### `npm run eject`
+##### Backend settings:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Change the maximum file size allowed in /php/php.ini
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+upload_max_filesize = 25M
+post_max_size = 25M
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Your /nginx.conf should look something like this
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server ipv6only=on;
+        client_max_body_size 25M;
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+        location / {
+            root PATH_TO_FRONTEND_BUILD_FOLDER
+            index index.html index.htm;
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+            // Choose the port your frontend will be hosting on
+            proxy_pass https://localhost:3000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_cache_bypass $http_upgrade;
 
-### Code Splitting
+            add_header Access-Control-Allow-Origin *;
+        }
+        server_name localhost;
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+        location /api {
+            root PATH_TO_BACKEND_FOLDER
+            index index.php index.html index.htm;
+            try_files $uri  /index.php$is_args$args;
 
-### Analyzing the Bundle Size
+            add_header Access-Control-Allow-Origin *;
+        }
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+        error_page 404 /404.html;
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+            root /usr/share/nginx/html;
+        }
 
-### Making a Progressive Web App
+        location ~ \.php$ {
+            try_files $uri =404;
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass    127.0.0.1:9000;
+            fastcgi_index index.php;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            include fastcgi_params;
+        }
+    }
+```
 
-### Advanced Configuration
+### Optional softwares
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+The following software were used during the development.
+| Software | Usage |
+| ------ | ------ |
+| [VSCode](https://code.visualstudio.com/) | Text editor |
+| [Postman](https://www.postman.com/) | Testing APIs |
+| [Beekeeper Studio](https://www.beekeeperstudio.io/) | SQL editor |
 
-### Deployment
+### Todos
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- Write more tests
+- Add server trigger/hooks
+- Optimize backend by adding containers and implement queuing.

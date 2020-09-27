@@ -1,6 +1,0 @@
-+1 view after click on the video
-before streaming video, check the permission from table user
-
-
-TEST: api server offline
-
