@@ -1,5 +1,7 @@
 # Mellon
 
+For backend documentation, please visit this [repository](https://github.com/PengHuang0508/streaming-app-backend)
+
 Mellon is a AWS powered online video streaming platform.
 
 - Upload your video
