@@ -19,6 +19,8 @@ import Navbar from './components/Nav/Navbar';
 // Files
 import history from './history.js';
 import muiTheme from './utils/theme';
+// Utils
+import PrivateRoute from './utils/PrivateRoute';
 
 const theme = createMuiTheme(muiTheme);
 
@@ -27,8 +29,12 @@ const Routes = (
     <Route exact path='/' component={Home} />
     <Route path='/watch' component={MediaPlayer} />
     <Route exact path='/account' component={Account} />
-    <Route exact path='/upload' component={Upload} />
-    <Route exact path='/edit' component={Edit} />
+    <PrivateRoute exact path='/upload'>
+      <Upload />
+    </PrivateRoute>
+    <PrivateRoute path='/edit'>
+      <Edit />
+    </PrivateRoute>
   </React.Fragment>
 );
 

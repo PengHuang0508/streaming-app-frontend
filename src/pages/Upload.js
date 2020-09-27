@@ -6,12 +6,16 @@ import { useInputs } from '../hooks/useInputs';
 // MUI
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-// import Select from '@material-ui/core/Select';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -40,15 +44,28 @@ const useStyles = makeStyles((theme) => ({
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
+  permissionRadio: {
+    display: 'block',
+  },
   uploadSubmit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  loadingWarning: {
+    marginTop: 5,
+    color: 'red',
+  },
+  loadingCircle: {
+    color: 'white',
   },
 }));
 
 const Upload = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const username = useSelector((state) => state.user.username);
+  const { loading, username } = useSelector((state) => ({
+    loading: state.ui.loading,
+    username: state.user.username,
+  }));
 
   const initialState = {
     title: '',
@@ -61,7 +78,6 @@ const Upload = () => {
     inputs: userInputs,
     setInputs: userSetInputs,
     bind: bindUserInputs,
-    reset: resetUserInputs,
   } = useInputs(initialState);
 
   const handleSelectFile = (e) => {
@@ -83,7 +99,6 @@ const Upload = () => {
     }
 
     dispatch(uploadMedia(formData));
-    resetUserInputs();
   };
 
   return (
@@ -110,22 +125,47 @@ const Upload = () => {
                 fullWidth
                 autoFocus
                 required
+                disabled={loading}
                 {...bindUserInputs}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <FormControl>
-                <TextField
-                  name='filedToUpload'
-                  InputProps={{
-                    type: 'file',
-                  }}
-                  fullWidth
-                  required
-                  onChange={handleSelectFile}
-                />
-                <FormHelperText>Maximum file size: 50MB</FormHelperText>
+              <FormControl component='fieldset'>
+                <FormLabel component='legend'>Permission</FormLabel>
+                <RadioGroup
+                  className={classes.permissionRadio}
+                  aria-label='Permission'
+                  name='min_permission'
+                  value={userInputs.min_permission}
+                  {...bindUserInputs}
+                >
+                  <FormControlLabel
+                    label='Free'
+                    value='free'
+                    control={<Radio />}
+                    disabled={loading}
+                  />
+                  <FormControlLabel
+                    label='Premium'
+                    value='premium'
+                    control={<Radio />}
+                    disabled={loading}
+                  />
+                </RadioGroup>
               </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name='filedToUpload'
+                InputProps={{
+                  type: 'file',
+                }}
+                fullWidth
+                required
+                disabled={loading}
+                onChange={handleSelectFile}
+              />
+              <FormHelperText>Maximum file size: 50MB</FormHelperText>
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -135,6 +175,7 @@ const Upload = () => {
                 multiline
                 rows={5}
                 fullWidth
+                disabled={loading}
                 {...bindUserInputs}
               />
             </Grid>
@@ -146,8 +187,21 @@ const Upload = () => {
             color='primary'
             className={classes.uploadSubmit}
           >
-            Upload
+            {loading ? (
+              <CircularProgress className={classes.loadingCircle} />
+            ) : (
+              'Upload'
+            )}
           </Button>
+          {loading && (
+            <Typography
+              className={classes.loadingWarning}
+              variant='subtitle2'
+              align='center'
+            >
+              Please do not reload page.
+            </Typography>
+          )}
         </form>
       </Paper>
     </Container>

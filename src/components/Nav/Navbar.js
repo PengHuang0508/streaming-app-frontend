@@ -17,13 +17,11 @@ import MenuIcon from '@material-ui/icons/Menu';
 // Components
 import ResponsiveDrawer from '../Drawer/Drawer';
 
-const drawerWidth = 240;
-
 const useStyles = makeStyles((theme) => ({
   appBar: {
     [theme.breakpoints.up('md')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
+      width: 'calc(100% - 245px)',
+      marginLeft: 245,
     },
   },
   menuButton: {

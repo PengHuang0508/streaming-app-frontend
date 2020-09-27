@@ -47,9 +47,12 @@ export const uploadMedia = (formData) => (dispatch) => {
           },
         })
       );
+
+      dispatch({ type: LOADING_UI_DONE });
     })
     .catch((err) => {
       console.log(err);
+      dispatch({ type: LOADING_UI_DONE });
       dispatch(
         enqueueSnackbar({
           message: `Error: ${err.response.data.message}`,
@@ -61,8 +64,6 @@ export const uploadMedia = (formData) => (dispatch) => {
       );
       dispatch({ type: SET_ERRORS, payload: err.response.data.message });
     });
-
-  dispatch({ type: LOADING_UI_DONE });
 };
 
 export const streamMedia = (mediaKey) => (dispatch) => {

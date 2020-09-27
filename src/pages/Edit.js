@@ -1,6 +1,11 @@
 import React, { useEffect, forwardRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getMediaList, updateMedia } from '../redux/actions/mediaActions';
+import {
+  getMediaList,
+  updateMedia,
+  deleteMedia,
+} from '../redux/actions/mediaActions';
+import { enqueueSnackbar } from '../redux/actions/snackbarActions';
 import MaterialTable from 'material-table';
 // MUI
 import Container from '@material-ui/core/Container';
@@ -71,8 +76,16 @@ const EditPage = () => {
     return () => {};
   }, [dispatch]);
 
-  const handleUpdate = (newData) => {
-    dispatch(updateMedia(newData));
+  const handleInvalidInput = () => {
+    dispatch(
+      enqueueSnackbar({
+        message: "Permission can only be 'free' or 'premium'",
+        options: {
+          key: new Date().getTime() + Math.random(),
+          variant: 'error',
+        },
+      })
+    );
   };
 
   return (
@@ -86,7 +99,19 @@ const EditPage = () => {
           editable={{
             onRowUpdate: (newData) =>
               new Promise((resolve, reject) => {
-                handleUpdate(newData);
+                if (
+                  newData.permission === 'free' ||
+                  newData.permission === 'admin'
+                ) {
+                  dispatch(updateMedia(newData));
+                  resolve();
+                }
+                handleInvalidInput();
+                reject();
+              }),
+            onRowDelete: (oldData) =>
+              new Promise((resolve, reject) => {
+                dispatch(deleteMedia(oldData.media_key));
                 resolve();
               }),
           }}
