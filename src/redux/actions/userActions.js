@@ -55,8 +55,11 @@ export const registerUser = (registerData) => (dispatch) => {
       const userInfo = {
         username: registerData.username,
         email: registerData.attributes.email,
+        permission: 'free',
       };
       dispatch(saveUserInfoToDatabase(userInfo));
+      dispatch({ type: SET_USER, payload: userInfo });
+      history.push('/');
     })
     .catch((err) => {
       console.log(err);
