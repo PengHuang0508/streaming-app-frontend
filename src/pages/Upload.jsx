@@ -81,8 +81,11 @@ const Upload = () => {
   } = useInputs(initialState);
 
   const handleSelectFile = (e) => {
-    let fileToUpload = e.target.files[0];
+    if (e.target.files.length > 1) {
+      return alert('You can only upload one video/audio file at a time.');
+    }
 
+    let fileToUpload = e.target.files[0];
     userSetInputs({
       ...userInputs,
       fileToUpload: fileToUpload,
@@ -165,7 +168,7 @@ const Upload = () => {
                 disabled={loading}
                 onChange={handleSelectFile}
               />
-              <FormHelperText>Maximum file size: 50MB</FormHelperText>
+              <FormHelperText>Maximum file size: 25MB</FormHelperText>
             </Grid>
             <Grid item xs={12}>
               <TextField

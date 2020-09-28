@@ -1,4 +1,8 @@
-import { CLOSE_SNACKBAR, ENQUEUE_SNACKBAR, REMOVE_SNACKBAR } from '../types';
+import {
+  CLOSE_SNACKBAR,
+  ENQUEUE_SNACKBAR,
+  REMOVE_SNACKBAR,
+} from '../actionTypes';
 
 const defaultState = {
   notifications: [],

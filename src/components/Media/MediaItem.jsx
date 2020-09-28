@@ -75,54 +75,58 @@ const MediaItem = (props) => {
     }
   };
 
+  const MediaItemCard = () => (
+    <React.Fragment>
+      <div className={classes.thumbnailContainer}>
+        <img
+          className={classes.thumbnail}
+          alt={itemData.title}
+          src={itemData.thumbnail_url}
+          onClick={() =>
+            handleStreamMedia(itemData.media_key, itemData.min_permission)
+          }
+          onError={(e) => {
+            e.target.src = imageNotFound;
+          }}
+        />
+        <div className={classes.mediaDuration}>
+          {itemData.duration.slice(0, -3)}
+        </div>
+      </div>
+      <Box pr={2}>
+        <Typography
+          className={classes.mediaTitle}
+          gutterBottom
+          variant='body2'
+          onClick={() =>
+            handleStreamMedia(itemData.media_key, itemData.min_permission)
+          }
+        >
+          {itemData.title}
+        </Typography>
+        <Typography display='block' variant='caption' color='textSecondary'>
+          {itemData.uploaded_by}
+        </Typography>
+        <Typography variant='caption' color='textSecondary'>
+          {`${itemData.view} views • ${itemData.created_at.slice(0, 10)}`}
+        </Typography>
+      </Box>
+    </React.Fragment>
+  );
+
+  const LoadingSkelton = () => (
+    <React.Fragment>
+      <Skeleton variant='rect' width={210} height={118} />
+      <Grid pt={0.5}>
+        <Skeleton width='30%' />
+        <Skeleton width='50%' />
+      </Grid>
+    </React.Fragment>
+  );
+
   return (
     <Grid item xs={12} sm={4} md={4} lg={3} align='center'>
-      {itemData ? (
-        <div className={classes.thumbnailContainer}>
-          <img
-            className={classes.thumbnail}
-            alt={itemData.title}
-            src={itemData.thumbnail_url}
-            onClick={() =>
-              handleStreamMedia(itemData.media_key, itemData.min_permission)
-            }
-            onError={(e) => {
-              e.target.src = imageNotFound;
-            }}
-          />
-          <div className={classes.mediaDuration}>
-            {itemData.duration.slice(0, -3)}
-          </div>
-        </div>
-      ) : (
-        <Skeleton variant='rect' width={210} height={118} />
-      )}
-
-      {itemData ? (
-        <Box pr={2}>
-          <Typography
-            className={classes.mediaTitle}
-            gutterBottom
-            variant='body2'
-            onClick={() =>
-              handleStreamMedia(itemData.media_key, itemData.min_permission)
-            }
-          >
-            {itemData.title}
-          </Typography>
-          <Typography display='block' variant='caption' color='textSecondary'>
-            {itemData.uploaded_by}
-          </Typography>
-          <Typography variant='caption' color='textSecondary'>
-            {`${itemData.view} views • ${itemData.created_at.slice(0, 10)}`}
-          </Typography>
-        </Box>
-      ) : (
-        <Grid pt={0.5}>
-          <Skeleton width='30%' />
-          <Skeleton width='50%' />
-        </Grid>
-      )}
+      {itemData ? <MediaItemCard /> : <LoadingSkelton />}
     </Grid>
   );
 };

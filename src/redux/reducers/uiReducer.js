@@ -3,7 +3,7 @@ import {
   LOADING_UI_DONE,
   SET_ERRORS,
   CLEAR_ERRORS,
-} from '../types';
+} from '../actionTypes';
 
 const initialState = {
   loading: false,

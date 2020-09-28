@@ -22,6 +22,7 @@ const Home = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const windowSize = useWindowSize();
+  const showFooter = windowSize.height > 700;
 
   useEffect(() => {
     dispatch(getMediaList());
@@ -31,7 +32,7 @@ const Home = () => {
   return (
     <div className={classes.homeRoot}>
       <Media />
-      {windowSize.height > 700 && <Footer />}
+      {showFooter && <Footer />}
     </div>
   );
 };

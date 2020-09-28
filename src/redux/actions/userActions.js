@@ -9,7 +9,7 @@ import {
   CLEAR_ERRORS,
   SET_USER,
   CLEAR_USER,
-} from '../types';
+} from '../actionTypes';
 
 export const fetchUserInfoFromDatabase = (username) => (dispatch) => {
   dispatch({ type: LOADING_UI });

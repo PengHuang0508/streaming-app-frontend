@@ -6,7 +6,7 @@ import {
   CLEAR_ERRORS,
   SET_MEDIA_LIST,
   SET_STREAM_URL,
-} from '../types';
+} from '../actionTypes';
 import { enqueueSnackbar } from './snackbarActions';
 
 export const getMediaList = () => (dispatch) => {
@@ -95,7 +95,7 @@ export const streamMedia = (mediaKey) => (dispatch) => {
 export const increaseView = (mediaKey) => (dispatch) => {
   axios.post(`/api/database/media/update/${mediaKey}/view`).catch((err) => {
     console.log(err);
-    dispatch({ type: SET_ERRORS, payload: err.response });
+    dispatch({ type: SET_ERRORS, payload: err.response.data });
   });
 };
 
@@ -105,7 +105,7 @@ export const updateMedia = (mediaInfo) => (dispatch) => {
   formData.append('media_description', mediaInfo.media_description);
   formData.append('min_permission', mediaInfo.min_permission);
 
-  axios
+  return axios
     .post(`/api/database/media/update/${mediaInfo.media_key}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -116,16 +116,25 @@ export const updateMedia = (mediaInfo) => (dispatch) => {
     })
     .catch((err) => {
       console.log(err);
-      dispatch({ type: SET_ERRORS, payload: err.response });
+      dispatch(
+        enqueueSnackbar({
+          message: err.response.data.message,
+          options: {
+            key: new Date().getTime() + Math.random(),
+            variant: 'error',
+          },
+        })
+      );
+      dispatch({ type: SET_ERRORS, payload: err.response.data });
     });
 };
 
 export const deleteMedia = (mediaKey) => (dispatch) => {
-  axios
+  return axios
     .delete(`/api/database/media/delete/${mediaKey}`)
     .then(() => dispatch(getMediaList()))
     .catch((err) => {
       console.log(err);
-      dispatch({ type: SET_ERRORS, payload: err.response });
+      dispatch({ type: SET_ERRORS, payload: err.response.data });
     });
 };

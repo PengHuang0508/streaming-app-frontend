@@ -4,7 +4,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 // Components
-import DrawerSection from './DrawerSection';
+import DrawerSections from './DrawerSections';
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -39,7 +39,7 @@ const ResponsiveDrawer = (props) => {
           }}
         >
           {/* {drawer} */}
-          <DrawerSection />
+          <DrawerSections />
         </Drawer>
       </Hidden>
       <Hidden smDown implementation='js'>
@@ -50,7 +50,7 @@ const ResponsiveDrawer = (props) => {
           variant='permanent'
           open
         >
-          <DrawerSection />
+          <DrawerSections />
         </Drawer>
       </Hidden>
     </nav>

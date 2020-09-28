@@ -1,9 +1,9 @@
-import { SET_USER, CLEAR_USER } from '../types';
+import { SET_USER, CLEAR_USER } from '../actionTypes';
 
 const initialState = {
   username: '',
   email: '',
-  permission: 'free',
+  permission: '',
   isAuthenticated: false,
 };
 
@@ -11,9 +11,7 @@ export default function (state = initialState, action) {
   switch (action.type) {
     case SET_USER:
       return {
-        username: action.payload.username,
-        email: action.payload.email,
-        permission: action.payload.permission,
+        ...action.payload,
         isAuthenticated: true,
       };
     case CLEAR_USER:

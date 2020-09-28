@@ -29,7 +29,7 @@ const Media = () => {
   const classes = useStyles();
   const mediaList = useSelector((state) => state.media.mediaList);
 
-  const createCategory = () => {
+  const Categories = () => {
     let categoryList = {};
     let mediaListComponent = [];
 
@@ -63,7 +63,11 @@ const Media = () => {
     return mediaListComponent;
   };
 
-  return <div className={classes.main}>{createCategory()}</div>;
+  return (
+    <div className={classes.main}>
+      <Categories />
+    </div>
+  );
 };
 
 export default Media;

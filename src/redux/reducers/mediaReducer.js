@@ -1,4 +1,4 @@
-import { SET_MEDIA_LIST, SET_STREAM_URL } from '../types';
+import { SET_MEDIA_LIST, SET_STREAM_URL } from '../actionTypes';
 
 const initialState = {
   mediaList: [],
