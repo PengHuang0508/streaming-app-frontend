@@ -19,8 +19,8 @@ import UserInformationDisplay from './UserInformationDisplay';
 const useStyles = makeStyles((theme) => ({
   appBar: {
     [theme.breakpoints.up('md')]: {
-      width: 'calc(100% - 245px)',
-      marginLeft: 245,
+      width: 'calc(100% - 240px)',
+      marginLeft: 240,
     },
   },
   menuButton: {
@@ -59,39 +59,6 @@ const Navbar = () => {
     isRedirect && history.push('/account');
   };
 
-  const MenuBar = () => (
-    <React.Fragment>
-      <IconButton
-        aria-label='account'
-        aria-controls='menu-appbar'
-        aria-haspopup='true'
-        onClick={handleMenuToggle}
-        color='inherit'
-      >
-        <AccountCircle />
-      </IconButton>
-      <Menu
-        id='menu-appbar'
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={open}
-        onClose={() => handleCloseAndRedirect(false)}
-      >
-        <MenuItem onClick={() => handleCloseAndRedirect(true)}>
-          Sign in
-        </MenuItem>
-      </Menu>
-    </React.Fragment>
-  );
-
   return (
     <React.Fragment>
       <AppBar position='fixed' className={classes.appBar}>
@@ -111,7 +78,40 @@ const Navbar = () => {
               : 'Welcome'}
           </Typography>
 
-          {isAuthenticated ? <UserInformationDisplay /> : <MenuBar />}
+          {isAuthenticated ? (
+            <UserInformationDisplay />
+          ) : (
+            <React.Fragment>
+              <IconButton
+                aria-label='account'
+                aria-controls='menu-appbar'
+                aria-haspopup='true'
+                onClick={handleMenuToggle}
+                color='inherit'
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id='menu-appbar'
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                anchorEl={anchorEl}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={open}
+                onClose={() => handleCloseAndRedirect(false)}
+              >
+                <MenuItem onClick={() => handleCloseAndRedirect(true)}>
+                  Sign in
+                </MenuItem>
+              </Menu>
+            </React.Fragment>
+          )}
         </Toolbar>
       </AppBar>
       <ResponsiveDrawer

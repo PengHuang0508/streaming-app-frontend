@@ -20,7 +20,6 @@ export const fetchUserInfoFromDatabase = (username) => (dispatch) => {
       dispatch({ type: SET_USER, payload: res.data[0] });
     })
     .catch((err) => {
-      console.log(err);
       dispatch({ type: SET_ERRORS, payload: err.message });
     });
 
@@ -31,7 +30,7 @@ export const saveUserInfoToDatabase = (userInfo) => (dispatch) => {
   let formData = new FormData();
 
   for (let key in userInfo) {
-    formData.append.append(key, userInfo[key]);
+    formData.append(key, userInfo[key]);
   }
 
   axios
@@ -41,7 +40,6 @@ export const saveUserInfoToDatabase = (userInfo) => (dispatch) => {
       },
     })
     .catch((err) => {
-      console.log(err);
       dispatch({ type: SET_ERRORS, payload: err.message });
     });
 };
@@ -62,7 +60,6 @@ export const registerUser = (registerData) => (dispatch) => {
       history.push('/');
     })
     .catch((err) => {
-      console.log(err);
       dispatch({ type: SET_ERRORS, payload: err.message });
     });
 
@@ -79,7 +76,6 @@ export const signIn = (signInData) => (dispatch) => {
       history.push('/');
     })
     .catch((err) => {
-      console.log(err);
       dispatch({ type: SET_ERRORS, payload: err.message });
     });
 
@@ -111,7 +107,6 @@ export const updateUserPermission = (userInfo) => (dispatch) => {
       dispatch(fetchUserInfoFromDatabase(userInfo.username));
     })
     .catch((err) => {
-      console.log(err);
       dispatch({ type: SET_ERRORS, payload: err.message });
     });
 
@@ -126,7 +121,6 @@ export const signOut = () => (dispatch) => {
       dispatch({ type: CLEAR_USER });
     })
     .catch((err) => {
-      console.log(err);
       dispatch({ type: SET_ERRORS, payload: err.message });
     });
 

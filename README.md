@@ -8,7 +8,11 @@ Mellon is a AWS powered online video streaming platform.
 - Backend will do all the processing
 - Watch your video wherever!
 
-## Features
+## Live demo
+
+[Mellon](http://54.173.87.111/) - hosted on AWS EC2
+
+### Features
 
 - Registered users can upload and edit videos.
 - Backend takes care of all the video preparation and transcoding.

@@ -76,7 +76,7 @@ const DrawerSection = () => {
     } else {
       dispatch(
         enqueueSnackbar({
-          message: `Sorry, you don't have the permission to upload.`,
+          message: `Sorry, only premium members can do this.`,
           options: {
             key: new Date().getTime() + Math.random(),
             variant: 'warning',

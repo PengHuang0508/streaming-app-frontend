@@ -20,7 +20,6 @@ export const getMediaList = () => (dispatch) => {
       dispatch({ type: LOADING_UI_DONE });
     })
     .catch((err) => {
-      console.log(err);
       dispatch({ type: SET_ERRORS, payload: err.response });
     });
 };
@@ -51,7 +50,6 @@ export const uploadMedia = (formData) => (dispatch) => {
       dispatch({ type: LOADING_UI_DONE });
     })
     .catch((err) => {
-      console.log(err);
       dispatch({ type: LOADING_UI_DONE });
       dispatch(
         enqueueSnackbar({
@@ -76,7 +74,6 @@ export const streamMedia = (mediaKey) => (dispatch) => {
       dispatch({ type: SET_STREAM_URL, payload: res.data });
     })
     .catch((err) => {
-      console.log(err);
       dispatch(
         enqueueSnackbar({
           message: `Error: ${err.response.data.message}`,
@@ -94,7 +91,6 @@ export const streamMedia = (mediaKey) => (dispatch) => {
 
 export const increaseView = (mediaKey) => (dispatch) => {
   axios.post(`/api/database/media/update/${mediaKey}/view`).catch((err) => {
-    console.log(err);
     dispatch({ type: SET_ERRORS, payload: err.response.data });
   });
 };
@@ -115,7 +111,6 @@ export const updateMedia = (mediaInfo) => (dispatch) => {
       dispatch(getMediaList());
     })
     .catch((err) => {
-      console.log(err);
       dispatch(
         enqueueSnackbar({
           message: err.response.data.message,
@@ -134,7 +129,6 @@ export const deleteMedia = (mediaKey) => (dispatch) => {
     .delete(`/api/database/media/delete/${mediaKey}`)
     .then(() => dispatch(getMediaList()))
     .catch((err) => {
-      console.log(err);
       dispatch({ type: SET_ERRORS, payload: err.response.data });
     });
 };
