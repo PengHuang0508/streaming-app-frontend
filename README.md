@@ -45,6 +45,8 @@ Mellon is a AWS powered online video streaming platform.
 
 **Make sure you have the backend services running first.** Please refer to the [backend repository](https://github.com/PengHuang0508/streaming-app-backend) for instructions on how to setup.
 
+Go to /src/config.sample.json and fill in your own AWS Cognito credentials.
+
 ```sh
 $ cd streaming-app-frontend
 $ npm install
