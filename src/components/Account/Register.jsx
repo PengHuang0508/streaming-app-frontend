@@ -123,7 +123,7 @@ const Register = (props) => {
           </Button>
         </form>
         <Typography className={classes.registerFootnote} variant='subtitle2'>
-          {'Always have an account? Click '}
+          {'Already have an account? Click '}
           <Link href='#' onClick={handleSwitchAction}>
             here
           </Link>

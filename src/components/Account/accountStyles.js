@@ -14,9 +14,6 @@ const formStyles = makeStyles((theme) => ({
   submitButton: {
     margin: theme.spacing(2, 0),
   },
-  registerFootnote: {
-    textAlign: 'right',
-  },
   generalError: {
     color: 'red',
   },

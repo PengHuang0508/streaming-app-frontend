@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   categoryGrid: {
     width: '100%',
+    background: 'red',
   },
   divider: {
     height: 5,

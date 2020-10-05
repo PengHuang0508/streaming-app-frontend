@@ -7,6 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
+  userPermissionText: {
+    flexGrow: 1,
+  },
   permissionButton: {
     marginLeft: theme.spacing(1),
   },
@@ -48,9 +51,10 @@ const UserInformationDisplay = () => {
 
   return (
     <React.Fragment>
-      <Typography color='secondary'>{`${capitalizeString(
-        permission
-      )} account`}</Typography>
+      <Typography
+        className={classes.userPermissionText}
+        color='secondary'
+      >{`${capitalizeString(permission)} account`}</Typography>
 
       {permission === 'free' ? (
         <Button

@@ -67,3 +67,7 @@ The following softwares were used during the development.
 - Write more tests
 - Add server trigger/hooks
 - Optimize backend by adding containers and implement queuing
+
+### Known issues
+
+- Can't play HLS stream on iOS
