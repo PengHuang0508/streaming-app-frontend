@@ -2,15 +2,11 @@
 
 For backend documentation, please visit this [repository](https://github.com/PengHuang0508/streaming-app-backend)
 
-Mellon is a AWS powered online video streaming platform.
+Mellon is an AWS powered online video streaming platform.
 
 - Upload your video
 - Backend will do all the processing
 - Watch your video wherever!
-
-## Live demo
-
-[Mellon](http://54.173.87.111/) - hosted on AWS EC2
 
 ### Features
 
@@ -55,7 +51,7 @@ $ npm run
 
 ### Optional
 
-The following softwares were used during the development.
+The following tools were used throughout the development of Mellon.
 | Software | Usage |
 | ------ | ------ |
 | [VSCode](https://code.visualstudio.com/) | Text editor |
@@ -66,7 +62,7 @@ The following softwares were used during the development.
 
 - Write more tests
 - Add server trigger/hooks
-- Optimize backend by adding containers and implement queuing
+- Optimize backend by containerizing and implementing queuing
 
 ### Known issues
 
